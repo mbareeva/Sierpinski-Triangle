@@ -1,4 +1,4 @@
-import java.util.Random;
+//import java.util.Random;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -9,13 +9,15 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class SerpinskiTriangle {
 	public static int SIZE = 800;
-
+	public static ArrayList<Color> colors = new ArrayList<>();
+	
 	JFrame frame;
 	JPanel panel;
 
@@ -49,6 +51,7 @@ public class SerpinskiTriangle {
 
 	public static void main(String[] args) {
 		SerpinskiTriangle triangle = new SerpinskiTriangle();
+		generateColor(4);
 		triangle.display();
 	}
 
@@ -56,7 +59,6 @@ public class SerpinskiTriangle {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setBackground(Color.white);
 		g2.clearRect(0, 0, size.width, size.height);
-		//g2.draw3DRect(20, 20, size.width - 40, size.height - 40, true);
 		
 		//set the height of triangle that is equal to the frame's height;
 		//y value  of left and right bottom points = height.
@@ -74,8 +76,10 @@ public class SerpinskiTriangle {
 		triangle.addPoint(b.x, b.y);
 		triangle.addPoint(c.x, c.y);
 		
+		g2.fillPolygon(triangle);
 		g2.drawPolygon(triangle);
-		paintSubTriangles(g, 5, a, b, c);
+		
+		paintSubTriangles(g2, 4, a, b, c);
 	}
 	/*
 	 * Draws recursively triangles inside the big triangle till it reaches the level.
@@ -100,22 +104,23 @@ public class SerpinskiTriangle {
 		triangle.addPoint(newP2.x, newP2.y);
 		triangle.addPoint(newP3.x, newP3.y);
 		
-		
-		//g.drawPolygon(triangle);
-		
-		 g.setColor(generateColor());
+		 g.setColor(colors.get(level - 1));
 		 g.fillPolygon(triangle);
 		 g.drawPolygon(triangle);
-		paintSubTriangles(g, level-1, newP1, newP2, newP3);
-//		 g.setColor(Color.red);
-//		g.fillPolygon(triangle);
-		paintSubTriangles(g, level-1, newP1, newP2, newP3);
-		// g.setColor(Color.yellow);
-		paintSubTriangles(g, level-1, newP1, newP2, newP3);
-		}
-		
-		
+		 
+		 //was a mistake / here creating recursion inside the inner triangle.
+//		paintSubTriangles(g, level-1, newP1, newP2, newP3);
+//		paintSubTriangles(g, level-1, newP1, newP2, newP3);
+//		paintSubTriangles(g, level-1, newP1, newP2, newP3);
+		 
+		 //create recursively triangles in the side triangles
+		 paintSubTriangles(g, level-1, x1, newP1, newP3);
+		 paintSubTriangles(g, level-1, newP1, x2, newP2);
+		 paintSubTriangles(g, level-1, newP2, x3, newP3);
+			 
+		}	
 	}
+	
 	/*
 	 * Returns the midpoint of two endpoints.
 	 * @param x1 The one point of a line.
@@ -126,16 +131,24 @@ public class SerpinskiTriangle {
 		Point p = new Point((x1.x+x2.x)/2, (x1.y + x2.y)/2);
 		return p;
 	}
+	
 	/*
 	 * Generate the the random rgb color.
+	 * @param level Defines the settled amount of colors for each level
 	 * @retun The color in rgb format.
 	 */
-	public Color generateColor() {
+	public static void generateColor(int level) {
+		int i = 0;
+		while(i < level) {
 		int r = (int) (Math.random()*256);
 		int g = (int) (Math.random()*256);
 		int b = (int) (Math.random()*256);
+		Color color = new Color(r, g, b);
+		colors.add(color);
+		i++;
+		}
 		
-		return new Color(r, g, b);
+		
 		
 	}
 

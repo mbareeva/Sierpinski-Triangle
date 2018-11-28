@@ -108,11 +108,6 @@ public class SerpinskiTriangle {
 		 g.fillPolygon(triangle);
 		 g.drawPolygon(triangle);
 		 
-		 //was a mistake / here creating recursion inside the inner triangle.
-//		paintSubTriangles(g, level-1, newP1, newP2, newP3);
-//		paintSubTriangles(g, level-1, newP1, newP2, newP3);
-//		paintSubTriangles(g, level-1, newP1, newP2, newP3);
-		 
 		 //create recursively triangles in the side triangles
 		 paintSubTriangles(g, level-1, x1, newP1, newP3);
 		 paintSubTriangles(g, level-1, newP1, x2, newP2);
